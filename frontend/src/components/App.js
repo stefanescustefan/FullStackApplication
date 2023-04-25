@@ -14,6 +14,7 @@ export default class App extends Component {
             </div>
         );
     }
+
 }
 
 const appDiv = document.getElementById("app");

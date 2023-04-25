@@ -21,10 +21,10 @@ export default class RoomJoinPage extends Component {
                 </Grid>
                 <Grid item xs={12} align="center">
                     <TextField error={this.state.error} label="code" placeholder="Enter a room code" value={this.state.roomCode}
-                               helperText={this.state.error} variant="outlined"/>
+                               helperText={this.state.error} variant="outlined" on onChange={this.handleTextFieldChange}/>
                 </Grid>
                 <Grid item xs={12} align="center">
-                    <Button variant="contained" color="primary">Enter Room</Button>
+                    <Button variant="contained" color="primary" onClick={this.roomButtonPressed}>Enter Room</Button>
                 </Grid>
                 <Grid item xs={12} align="center">
                     <Button variant="contained" color="secondary" to="/" component={Link}>Back</Button>
@@ -32,4 +32,34 @@ export default class RoomJoinPage extends Component {
             </Grid>
         );
     }
+
+    handleTextFieldChange = (e) => {
+        this.setState({
+            roomCode: e.target.value,
+        })
+    }
+
+    roomButtonPressed = () => {
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                code: this.state.roomCode
+            })
+        };
+        fetch('/api/join-room', requestOptions)
+            .then((response) => {
+                if (response.ok) {
+                    this.props.history.push(`/room/${this.state.roomCode}`)
+                } else {
+                    this.setState({
+                       error: "Room not found"
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
 }
