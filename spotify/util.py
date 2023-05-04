@@ -70,7 +70,8 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     if post_:
         post(BASE_URL + endpoint, headers=header)
     if put_:
-        put(BASE_URL + endpoint, headers=header)
+        response = put(BASE_URL + endpoint, headers=header)
+        print(endpoint, response.status_code, response.reason, response.text)
 
     response = get(BASE_URL + endpoint, {}, headers=header)
 
@@ -78,3 +79,13 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
         return response.json()
     except:
         return {"Error": "Issue with request"}
+
+
+def play_song(session_id):
+    response = execute_spotify_api_request(session_id, "player/play", put_=True)
+    print("Util.py: ", response)
+    return response
+
+
+def pause_song(session_id):
+    return execute_spotify_api_request(session_id, "player/pause", put_=True)
